@@ -8,8 +8,6 @@ const express = require('express')
 const proxy = require('express-http-proxy')
 const opentelemetry = require('@opentelemetry/api')
 
-require('./tracing')
-
 const { logger } = require('./logger')
 const tracer = opentelemetry.trace.getTracer('proxy')
 
