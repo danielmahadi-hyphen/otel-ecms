@@ -6,7 +6,7 @@ const { NodeTracerProvider } = require('@opentelemetry/node')
 const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express')
 const { HttpInstrumentation } = require("@opentelemetry/instrumentation-http")
 const { PinoInstrumentation } = require('@opentelemetry/instrumentation-pino')
-const { ConsoleSpanExporter, SimpleSpanProcessor } = require('@opentelemetry/sdk-trace-base')
+const { ConsoleSpanExporter, BatchSpanProcessor } = require('@opentelemetry/sdk-trace-base')
 const { ZipkinExporter } = require('@opentelemetry/exporter-zipkin')
 const { Resource } = require('@opentelemetry/resources')
 const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions')
@@ -23,14 +23,14 @@ const provider = new NodeTracerProvider({
 })
 
 const consoleExporter = new ConsoleSpanExporter()
-const spanProcessor = new SimpleSpanProcessor(consoleExporter)
+const spanProcessor = new BatchSpanProcessor(consoleExporter)
 provider.addSpanProcessor(spanProcessor)
 
 const zipkinExporter = new ZipkinExporter({
   url: 'http://localhost:9411/api/v2/spans',
   serviceName: SERVICE_NAME,
 })
-const zipkinProcessor = new SimpleSpanProcessor(zipkinExporter)
+const zipkinProcessor = new BatchSpanProcessor(zipkinExporter)
 provider.addSpanProcessor(zipkinProcessor)
 
 provider.register()
